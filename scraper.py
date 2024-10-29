@@ -78,4 +78,6 @@ def main():
             if not lists:
                 break
             
+    print('Finished extracting.')
+    
 main()
