@@ -35,6 +35,10 @@ The web scraper will extract the following data for each real estate listing
 - Numbers of Baths
 See example csv file provided. 
 
+## TODO
+- [ ] Make it possible to put data into an sql database
+- [ ] Create visualization tool with pandas/matplotlib
+
 ### Credits
 This project was created by Amy Bui. The code is based on examples from the BeautifulSoup 
 documentation and the requests documentation, and draws inspiration from 
