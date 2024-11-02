@@ -9,10 +9,11 @@ To run scraper.py, you will need Python 3 installed on your machine. Additionall
 the following libraries are required: 
 - BeautifulSoup
 - requests
+- lxml
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install these libraries
 
 ```bash
-pip install beautifulsoup4 requests
+pip install beautifulsoup4 requests lxml
 ```
 
 ### Usage
