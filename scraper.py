@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup
-import requests
 from csv import writer
+import re
+import requests
 
 def main():
     # search for city and type of real estate to look for
     place = input('City to search: ').lower()
-    search_type = input('Searching for (sale/rent): ').lower()
+    search_type = input('Searching for (sale/rent): ').strip().lower()
 
     while search_type not in ['sale', 'rent']: 
         search_type = input('Please put \'sale\' or \'rent\': ')
@@ -15,6 +16,7 @@ def main():
     else: 
         type = 'true'
         
+    # read remax web pages
     params = {'pageNumber': '1', 'rentalsOnly': type}
     url = 'https://www.remax.ca/on/'+ place + '-real-estate'
     page = requests.get(url, params=params)
@@ -40,8 +42,8 @@ def main():
                         
                     #find price listing of property
                     price_listing = list.find('h2', attrs={'class': 'listing-card_price__lEBmo'}).find('span').get_text()
-                    price_listing = price_listing.replace(',', '').replace('$', '')
-                    
+                    price_listing = price_listing.replace('$', '').replace(',', '')
+                                        
                     # find number of beds and baths on the listing
                     bed = list.find('span', attrs={'data-cy': 'property-beds'}).find('span').get_text()
                     bath = list.find('span', attrs={'data-cy': 'property-baths'}).find('span').get_text()
@@ -52,17 +54,18 @@ def main():
                     listing_soup = BeautifulSoup(listing_page.content, 'lxml')
                     
                     details = listing_soup.find_all('li', attrs={'data-testid': 'detail-bullet'})
-                    property_type = 'Not listed'
-                    property_tax = 'Not listed'
-                    property_sqft = 'Not listed'
+                    property_type = 'N/A'
+                    property_sqft = 'N/A'
                     for detail in details: 
                         detail_type = detail.find('h4').get_text()
                         if detail_type == 'Property Tax': 
                             property_tax = detail.find_all('span')[1].get_text()
+                            property_tax = property_tax.replace('$', '').replace(',', '')
                         elif detail_type == 'Property Type': 
                             property_type = detail.find_all('span')[1].get_text()
                         elif detail_type == 'Square Footage': 
                             property_sqft = detail.find_all('span')[1].get_text()
+                            property_sqft = property_sqft.replace(',', '').replace(' SQFT', '')
                     
                     # consolidate information collected and put into csv file
                     info = [location, property_type, price_listing, property_sqft, property_tax, bed, bath]
